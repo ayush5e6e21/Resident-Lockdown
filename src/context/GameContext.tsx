@@ -42,8 +42,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize socket connection
   useEffect(() => {
-    const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
-    const newSocket = io(serverUrl);
+    // In production, connect to same origin (no URL needed). In dev, use localhost:3001.
+    const serverUrl = import.meta.env.DEV ? 'http://localhost:3001' : undefined;
+    const newSocket = io(serverUrl as any);
     setSocket(newSocket);
 
     newSocket.on('gameState', (state) => {

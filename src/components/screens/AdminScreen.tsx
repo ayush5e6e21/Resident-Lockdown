@@ -17,8 +17,8 @@ export function AdminScreen({ onClose, onAdminAuth }: { onClose: () => void; onA
     useEffect(() => {
         // Connect to server when authenticated
         if (isAuthenticated) {
-            const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
-            const newSocket = io(serverUrl);
+            const serverUrl = import.meta.env.DEV ? 'http://localhost:3001' : undefined;
+            const newSocket = io(serverUrl as any);
             setSocket(newSocket);
 
             newSocket.on('connect', () => {
