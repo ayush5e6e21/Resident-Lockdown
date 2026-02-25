@@ -77,7 +77,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/resident-lockdown.git
+git clone https://github.com/ayush5e6e21/resident-lockdown.git
 cd resident-lockdown
 
 # Install dependencies
