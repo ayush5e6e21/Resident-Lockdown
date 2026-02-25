@@ -21,7 +21,7 @@ export function LobbyScreen() {
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <div
-          className="w-[600px] h-[600px] rounded-full"
+          className="w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(220, 38, 38, 0.05) 0%, transparent 60%)'
           }}
@@ -46,11 +46,11 @@ export function LobbyScreen() {
               <div className="p-6">
                 {/* Avatar and Name */}
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="w-20 h-20 rounded-full border-2 border-blood bg-blood-dim flex items-center justify-center glow-blood shadow-inner">
-                    <User className="w-10 h-10 text-blood" />
+                  <div className="w-14 h-14 md:w-20 md:h-20 rounded-full border-2 border-blood bg-blood-dim flex items-center justify-center glow-blood shadow-inner">
+                    <User className="w-7 h-7 md:w-10 md:h-10 text-blood" />
                   </div>
                   <div>
-                    <h2 className="font-orbitron text-3xl font-bold text-text-bright text-glow-blood">
+                    <h2 className="font-orbitron text-xl sm:text-2xl md:text-3xl font-bold text-text-bright text-glow-blood">
                       {player.name}
                     </h2>
                     <p className="font-mono text-sm text-text-muted mt-1">
@@ -65,21 +65,21 @@ export function LobbyScreen() {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="bg-deep rounded-lg p-4 text-center border border-border-rust shadow-inner">
-                    <Activity className="w-6 h-6 text-blood mx-auto mb-2 drop-shadow-[0_0_5px_rgba(220,38,38,0.8)]" />
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-6 md:mb-8">
+                  <div className="bg-deep rounded-lg p-2.5 sm:p-3 md:p-4 text-center border border-border-rust shadow-inner">
+                    <Activity className="w-5 h-5 md:w-6 md:h-6 text-blood mx-auto mb-1 md:mb-2 drop-shadow-[0_0_5px_rgba(220,38,38,0.8)]" />
                     <p className="font-mono text-xs text-text-muted mb-1 tracking-widest">INFECTION</p>
-                    <p className="font-orbitron text-2xl font-bold text-blood">{player.infectionLevel}%</p>
+                    <p className="font-orbitron text-lg sm:text-xl md:text-2xl font-bold text-blood">{player.infectionLevel}%</p>
                   </div>
-                  <div className="bg-deep rounded-lg p-4 text-center border border-border-rust shadow-inner">
-                    <Trophy className="w-6 h-6 text-gold mx-auto mb-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                  <div className="bg-deep rounded-lg p-2.5 sm:p-3 md:p-4 text-center border border-border-rust shadow-inner">
+                    <Trophy className="w-5 h-5 md:w-6 md:h-6 text-gold mx-auto mb-1 md:mb-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
                     <p className="font-mono text-xs text-text-muted mb-1 tracking-widest">SCORE</p>
-                    <p className="font-orbitron text-2xl font-bold text-gold">{player.score}</p>
+                    <p className="font-orbitron text-lg sm:text-xl md:text-2xl font-bold text-gold">{player.score}</p>
                   </div>
-                  <div className="bg-deep rounded-lg p-4 text-center border border-border-rust shadow-inner">
+                  <div className="bg-deep rounded-lg p-2.5 sm:p-3 md:p-4 text-center border border-border-rust shadow-inner">
                     <Users className="w-6 h-6 text-text-dim mx-auto mb-2" />
                     <p className="font-mono text-xs text-text-muted mb-1 tracking-widest">RANK</p>
-                    <p className="font-orbitron text-2xl font-bold text-text-bright">#{playerRank}</p>
+                    <p className="font-orbitron text-lg sm:text-xl md:text-2xl font-bold text-text-bright">#{playerRank}</p>
                   </div>
                 </div>
 

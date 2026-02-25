@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface TrailPoint {
   x: number;
@@ -7,6 +7,19 @@ interface TrailPoint {
 }
 
 export function CursorTrail() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    // Detect touch-only devices (no hover capability)
+    const mq = window.matchMedia('(hover: none)');
+    setIsTouchDevice(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsTouchDevice(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Skip the entire canvas animation on touch devices
+  if (isTouchDevice) return null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailRef = useRef<TrailPoint[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -27,7 +40,7 @@ export function CursorTrail() {
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
-      
+
       trailRef.current.push({
         x: e.clientX,
         y: e.clientY,
@@ -55,7 +68,7 @@ export function CursorTrail() {
       trailRef.current.forEach((point, index) => {
         const alpha = 1 - point.age / 30;
         const size = (1 - point.age / 30) * 6;
-        
+
         const gradient = ctx.createRadialGradient(
           point.x, point.y, 0,
           point.x, point.y, size

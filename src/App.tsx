@@ -171,7 +171,7 @@ function GameContent() {
       <CursorTrail />
 
       {/* Footer */}
-      <footer className="fixed bottom-4 left-4 z-50 font-mono text-xs text-muted">
+      <footer className="fixed bottom-2 left-2 sm:bottom-4 sm:left-4 z-50 font-mono text-[10px] sm:text-xs text-muted">
         <p>RESIDENT LOCKDOWN v2.4.1</p>
       </footer>
     </div>

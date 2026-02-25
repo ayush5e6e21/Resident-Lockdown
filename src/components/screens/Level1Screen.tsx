@@ -65,7 +65,7 @@ export function Level1Screen() {
             className="text-center mb-8"
           >
             <Trophy className="w-16 h-16 text-gold mx-auto mb-4" />
-            <h1 className="font-orbitron text-3xl font-black text-gold mb-2">ALL QUERIES COMPLETED</h1>
+            <h1 className="font-orbitron text-2xl sm:text-3xl font-black text-gold mb-2">ALL QUERIES COMPLETED</h1>
             <p className="font-mono text-text-dim">AWAITING OTHER SUBJECTS TO FINISH...</p>
             <motion.div
               animate={{ opacity: [0.3, 1, 0.3] }}
@@ -139,8 +139,8 @@ export function Level1Screen() {
           <div className="p-4 flex flex-wrap items-center justify-between gap-4">
             {/* Level Info */}
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-sm border-2 border-blood bg-blood-dim flex items-center justify-center glow-blood shadow-inner">
-                <span className="font-orbitron font-black text-blood text-2xl drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]">1</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm border-2 border-blood bg-blood-dim flex items-center justify-center glow-blood shadow-inner">
+                <span className="font-orbitron font-black text-blood text-xl sm:text-2xl drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]">1</span>
               </div>
               <div>
                 <p className="font-orbitron text-md font-bold text-blood tracking-widest text-glow-blood">LEVEL 1</p>
@@ -160,11 +160,11 @@ export function Level1Screen() {
             </div>
 
             {/* Progress */}
-            <div className="text-right min-w-[120px]">
+            <div className="text-right min-w-[80px] sm:min-w-[120px]">
               <p className="font-orbitron text-lg">
                 {currentQuestionIndex + 1}<span className="text-text-dim">/{totalQuestions}</span>
               </p>
-              <div className="w-28 h-2 bg-deep rounded-full overflow-hidden mt-1 border border-border-gray">
+              <div className="w-20 sm:w-28 h-2 bg-deep rounded-full overflow-hidden mt-1 border border-border-gray ml-auto">
                 <motion.div
                   className="h-full bg-blood"
                   initial={{ width: 0 }}
@@ -337,7 +337,7 @@ export function Level1Screen() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="panel sticky top-6"
+            className="panel lg:sticky lg:top-6"
           >
             <div className="panel-header flex items-center justify-between">
               <span>RANKINGS</span>

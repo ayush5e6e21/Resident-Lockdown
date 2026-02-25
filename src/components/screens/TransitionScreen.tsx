@@ -36,8 +36,8 @@ export function TransitionScreen() {
                     >
                         {isSurvivor ? (
                             <>
-                                <ShieldCheck className="w-12 h-12 text-toxic mx-auto mb-3" />
-                                <h2 className="font-orbitron text-3xl font-black text-toxic mb-2">
+                                <ShieldCheck className="w-8 h-8 md:w-12 md:h-12 text-toxic mx-auto mb-2 md:mb-3" />
+                                <h2 className="font-orbitron text-xl sm:text-2xl md:text-3xl font-black text-toxic mb-2">
                                     YOU SURVIVED
                                 </h2>
                                 <p className="font-mono text-text-dim flex items-center justify-center gap-2">
@@ -47,8 +47,8 @@ export function TransitionScreen() {
                             </>
                         ) : (
                             <>
-                                <AlertTriangle className="w-12 h-12 text-blood mx-auto mb-3" />
-                                <h2 className="font-orbitron text-3xl font-black text-blood mb-2">
+                                <AlertTriangle className="w-8 h-8 md:w-12 md:h-12 text-blood mx-auto mb-2 md:mb-3" />
+                                <h2 className="font-orbitron text-xl sm:text-2xl md:text-3xl font-black text-blood mb-2">
                                     ELIMINATED
                                 </h2>
                                 <p className="font-mono text-text-dim">
@@ -66,11 +66,11 @@ export function TransitionScreen() {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2 }}
                     >
-                        <ShieldAlert className="w-16 h-16 text-blood mx-auto mb-4 animate-pulse" />
-                        <h1 className="font-orbitron text-4xl md:text-5xl font-black text-text-bright tracking-widest mb-2">
+                        <ShieldAlert className="w-10 h-10 md:w-16 md:h-16 text-blood mx-auto mb-3 md:mb-4 animate-pulse" />
+                        <h1 className="font-orbitron text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-text-bright tracking-widest mb-2">
                             SHORTLIST COMPILED
                         </h1>
-                        <p className="font-mono text-lg text-amber tracking-widest">
+                        <p className="font-mono text-sm sm:text-base md:text-lg text-amber tracking-wider md:tracking-widest">
                             LEVEL 1 PROTOCOL COMPLETE — TOP 10 ADVANCE
                         </p>
                     </motion.div>
@@ -90,7 +90,7 @@ export function TransitionScreen() {
                             <Users className="w-5 h-5" />
                             <span>SURVIVORS ADVANCING ({survivors.length})</span>
                         </div>
-                        <div className="p-4 bg-deep min-h-[300px] max-h-[500px] overflow-y-auto space-y-2">
+                        <div className="p-3 md:p-4 bg-deep min-h-[150px] sm:min-h-[200px] md:min-h-[300px] max-h-[400px] md:max-h-[500px] overflow-y-auto space-y-2">
                             {survivors.length > 0 ? (
                                 survivors.map((p, idx) => (
                                     <motion.div
@@ -99,8 +99,8 @@ export function TransitionScreen() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.6 + idx * 0.1 }}
                                         className={`flex justify-between items-center bg-background border p-3 ${player && p.id === player.id
-                                                ? 'border-toxic bg-toxic/10'
-                                                : 'border-border-gray'
+                                            ? 'border-toxic bg-toxic/10'
+                                            : 'border-border-gray'
                                             }`}
                                     >
                                         <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export function TransitionScreen() {
                             <AlertTriangle className="w-5 h-5" />
                             <span>ELIMINATED ({eliminated.length})</span>
                         </div>
-                        <div className="p-4 bg-deep min-h-[300px] max-h-[500px] overflow-y-auto space-y-2">
+                        <div className="p-3 md:p-4 bg-deep min-h-[150px] sm:min-h-[200px] md:min-h-[300px] max-h-[400px] md:max-h-[500px] overflow-y-auto space-y-2">
                             {eliminated.length > 0 ? (
                                 eliminated.map((p, idx) => (
                                     <motion.div

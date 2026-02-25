@@ -32,7 +32,7 @@ export function RegisterScreen() {
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <div
-          className="w-[500px] h-[500px] rounded-full"
+          className="w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(220, 38, 38, 0.06) 0%, transparent 60%)'
           }}
@@ -51,11 +51,11 @@ export function RegisterScreen() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-blood bg-blood/10 mb-4"
+            className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border border-blood bg-blood/10 mb-3 md:mb-4"
           >
-            <User className="w-8 h-8 text-blood" />
+            <User className="w-6 h-6 md:w-8 md:h-8 text-blood" />
           </motion.div>
-          <h2 className="font-orbitron text-3xl font-bold text-text-bright mb-2">
+          <h2 className="font-orbitron text-xl sm:text-2xl md:text-3xl font-bold text-text-bright mb-2">
             SUBJECT REGISTRATION
           </h2>
           <p className="font-mono text-sm text-text-dim">
@@ -86,7 +86,7 @@ export function RegisterScreen() {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={20}
                 placeholder="e.g., SUBJECT-1337"
-                className="w-full bg-deep border border-border-gray text-text-bright px-4 py-3 rounded font-mono text-lg focus:border-blood focus:outline-none transition-colors"
+                className="w-full bg-deep border border-border-gray text-text-bright px-3 py-2.5 sm:px-4 sm:py-3 rounded font-mono text-base md:text-lg focus:border-blood focus:outline-none transition-colors"
                 autoFocus
               />
               <p className="mt-2 font-mono text-xs text-text-dim">

@@ -706,6 +706,8 @@ body::after {
 }
 
 /* ==================== RESPONSIVE ==================== */
+
+/* --- Tablet & Small Desktop (768px) --- */
 @media (max-width: 768px) {
   .countdown-display {
     font-size: 2.5rem;
@@ -720,6 +722,156 @@ body::after {
     padding: 12px 24px;
     font-size: 0.8rem;
   }
+
+  .panel-header {
+    padding: 10px 14px;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+
+  .leaderboard-item {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .infection-bar {
+    height: 22px;
+  }
+
+  .panel::before,
+  .panel::after {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Reduce CRT overlay intensity for performance */
+  body::before {
+    opacity: 0.3;
+  }
+
+  body::after {
+    opacity: 0.03;
+  }
+
+  .scan-line {
+    opacity: 0.3;
+  }
+}
+
+/* --- Small Phones (480px) --- */
+@media (max-width: 480px) {
+  .countdown-display {
+    font-size: 2rem;
+  }
+
+  .option-card {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .panel-header {
+    padding: 8px 12px;
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+  }
+
+  .panel::before,
+  .panel::after {
+    width: 10px;
+    height: 10px;
+  }
+
+  .leaderboard-item {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .infection-bar {
+    height: 18px;
+  }
+
+  /* Further reduce CRT on very small screens */
+  body::before {
+    opacity: 0.15;
+  }
+
+  body::after {
+    opacity: 0.02;
+  }
+
+  .scan-line {
+    opacity: 0.2;
+  }
+}
+
+/* --- Touch Devices: disable hover-only effects --- */
+@media (hover: none) {
+  .option-card:hover {
+    background: rgba(10, 10, 10, 0.6);
+    border-color: var(--border-rust);
+    transform: none;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+  }
+
+  .option-card:hover::before {
+    transform: scaleY(0);
+  }
+
+  .btn-primary:hover::before {
+    left: -100%;
+  }
+
+  .btn-primary:hover {
+    background: var(--blood-dim);
+    color: var(--text-bright);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+    border-color: var(--blood-red);
+  }
+
+  /* Active state for touch feedback instead */
+  .option-card:active {
+    background: var(--blood-dim);
+    border-color: var(--blood-red);
+    box-shadow: 0 0 15px var(--blood-glow), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+
+  .btn-primary:active {
+    background: var(--blood-red);
+    color: #fff;
+    box-shadow: 0 0 30px var(--blood-glow);
+  }
+}
+
+/* --- Reduced Motion preference --- */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-glow,
+  .pulse-text,
+  .heartbeat,
+  .warning-active,
+  .scan-line,
+  .glitch-text::before,
+  .glitch-text::after {
+    animation: none !important;
+  }
+
+  .infection-fill {
+    transition: none;
+  }
+}
+
+/* --- Performance hints --- */
+.scan-line {
+  will-change: transform;
+}
+
+.infection-fill {
+  will-change: width;
 }
 
 /* ==================== ANIMATIONS ==================== */

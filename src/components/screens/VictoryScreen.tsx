@@ -26,7 +26,7 @@ export function VictoryScreen() {
 
       {/* Confetti effect (simplified) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-2 h-2 rounded-full"
@@ -70,9 +70,9 @@ export function VictoryScreen() {
             transition={{ duration: 2, repeat: Infinity }}
           >
             {isTop5 ? (
-              <Crown className="w-32 h-32 text-gold mx-auto" />
+              <Crown className="w-20 h-20 md:w-32 md:h-32 text-gold mx-auto" />
             ) : (
-              <Trophy className="w-32 h-32 text-gold mx-auto" />
+              <Trophy className="w-20 h-20 md:w-32 md:h-32 text-gold mx-auto" />
             )}
           </motion.div>
         </motion.div>
@@ -84,10 +84,10 @@ export function VictoryScreen() {
           transition={{ delay: 0.4 }}
           className="mb-8"
         >
-          <h1 className="font-orbitron text-5xl md:text-6xl font-black text-gold mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gold mb-3 md:mb-4">
             {isSpectator ? 'SIMULATION COMPLETE' : (isTop5 ? 'CHAMPION' : 'SURVIVOR')}
           </h1>
-          <p className="font-mono text-xl text-toxic">
+          <p className="font-mono text-base sm:text-lg md:text-xl text-toxic">
             {isSpectator ? `TOP CHAMPION: ${displayPlayer?.name || 'UNKNOWN'}` : 'YOU HAVE PROVEN WORTHY OF CONTAINMENT'}
           </p>
         </motion.div>
@@ -97,27 +97,27 @@ export function VictoryScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="grid grid-cols-3 gap-4 mb-8"
+          className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-6 md:mb-8"
         >
           <div className="panel border-gold/30">
             <div className="p-4 text-center">
               <Star className="w-5 h-5 text-gold mx-auto mb-2" />
               <p className="font-mono text-xs text-text-dim mb-1">RANK</p>
-              <p className={`font-orbitron text-3xl ${isTop5 ? 'text-gold' : 'text-text-bright'}`}>#{playerRank}</p>
+              <p className={`font-orbitron text-xl sm:text-2xl md:text-3xl ${isTop5 ? 'text-gold' : 'text-text-bright'}`}>#{playerRank}</p>
             </div>
           </div>
           <div className="panel border-gold/30">
             <div className="p-4 text-center">
               <Target className="w-5 h-5 text-toxic mx-auto mb-2" />
               <p className="font-mono text-xs text-text-dim mb-1">SCORE</p>
-              <p className="font-orbitron text-3xl text-toxic">{displayPlayer?.score || 0}</p>
+              <p className="font-orbitron text-xl sm:text-2xl md:text-3xl text-toxic">{displayPlayer?.score || 0}</p>
             </div>
           </div>
           <div className="panel border-gold/30">
             <div className="p-4 text-center">
               <Activity className="w-5 h-5 text-blood mx-auto mb-2" />
               <p className="font-mono text-xs text-text-dim mb-1">INFECTION</p>
-              <p className="font-orbitron text-3xl text-toxic">{displayPlayer?.infectionLevel || 0}%</p>
+              <p className="font-orbitron text-xl sm:text-2xl md:text-3xl text-toxic">{displayPlayer?.infectionLevel || 0}%</p>
             </div>
           </div>
         </motion.div>
@@ -131,14 +131,14 @@ export function VictoryScreen() {
         >
           <div className="panel-header text-gold">PERFORMANCE SUMMARY</div>
           <div className="p-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="text-center">
                 <p className="font-mono text-xs text-text-dim">CORRECT ANSWERS</p>
-                <p className="font-orbitron text-2xl text-toxic">{displayPlayer?.correctAnswers || 0}</p>
+                <p className="font-orbitron text-xl sm:text-2xl text-toxic">{displayPlayer?.correctAnswers || 0}</p>
               </div>
               <div className="text-center">
                 <p className="font-mono text-xs text-text-dim">WRONG ANSWERS</p>
-                <p className="font-orbitron text-2xl text-blood">{displayPlayer?.wrongAnswers || 0}</p>
+                <p className="font-orbitron text-xl sm:text-2xl text-blood">{displayPlayer?.wrongAnswers || 0}</p>
               </div>
             </div>
           </div>

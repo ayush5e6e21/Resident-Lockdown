@@ -77,7 +77,7 @@ export function LandingScreen() {
   if (showIntro) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
-        <div className="font-mono text-white text-lg md:text-2xl tracking-[0.3em] font-light flex items-center relative z-10" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+        <div className="font-mono text-white text-sm sm:text-lg md:text-2xl tracking-[0.15em] sm:tracking-[0.3em] font-light flex items-center relative z-10" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
           <motion.div
             initial="hidden"
             animate="visible"
@@ -105,7 +105,7 @@ export function LandingScreen() {
           <motion.span
             animate={{ opacity: [1, 0, 1] }}
             transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-            className="inline-block w-[4px] h-5 md:h-7 bg-white ml-2"
+            className="inline-block w-[3px] sm:w-[4px] h-4 sm:h-5 md:h-7 bg-white ml-1 sm:ml-2"
             style={{ boxShadow: '0 0 10px rgba(255, 255, 255, 0.8)' }}
           />
         </div>
@@ -129,7 +129,7 @@ export function LandingScreen() {
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
-          className="w-[600px] h-[600px] rounded-full"
+          className="w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 70%)'
           }}
@@ -144,7 +144,7 @@ export function LandingScreen() {
         animate={{ rotate: 360 }}
         transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
       >
-        <Biohazard className="w-[700px] h-[700px] text-blood" />
+        <Biohazard className="w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[700px] md:h-[700px] text-blood" />
       </motion.div>
 
       {/* Main content */}
@@ -161,14 +161,14 @@ export function LandingScreen() {
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              <Biohazard className="w-24 h-24 text-blood mx-auto" />
+              <Biohazard className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 text-blood mx-auto" />
             </motion.div>
             <motion.div
               className="absolute inset-0 blur-xl"
               animate={{ opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <Biohazard className="w-24 h-24 text-blood mx-auto" />
+              <Biohazard className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 text-blood mx-auto" />
             </motion.div>
           </div>
         </motion.div>
@@ -180,12 +180,12 @@ export function LandingScreen() {
           transition={{ duration: 2.2, delay: 0.4, ease: "easeOut" }}
           className="mb-4"
         >
-          <h1 className="font-orbitron text-7xl md:text-8xl font-black tracking-tight" style={{ textShadow: '0 0 20px rgba(185, 28, 28, 0.8)' }}>
+          <h1 className="font-orbitron text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight" style={{ textShadow: '0 0 20px rgba(185, 28, 28, 0.8)' }}>
             <span className="glitch-text text-blood" data-text="RESIDENT">
               RESIDENT
             </span>
           </h1>
-          <h1 className="font-orbitron text-7xl md:text-8xl font-black tracking-tight -mt-2">
+          <h1 className="font-orbitron text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight -mt-1 md:-mt-2">
             <span className="text-text-bright drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
               LOCKDOWN
             </span>
@@ -197,7 +197,7 @@ export function LandingScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="font-mono text-blood text-sm tracking-[0.4em] mb-12 font-bold"
+          className="font-mono text-blood text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.4em] mb-6 sm:mb-8 md:mb-12 font-bold"
         >
           BIOHAZARD CONTAINMENT SIMULATION v2.4.1
         </motion.p>
@@ -234,7 +234,7 @@ export function LandingScreen() {
           <motion.button
             animate={{ opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="relative z-10 font-mono text-white bg-blood/10 border border-blood px-8 py-3 rounded-sm hover:bg-blood hover:text-white transition-all duration-300 tracking-[0.2em] text-xs md:text-sm font-bold uppercase cursor-pointer"
+            className="relative z-10 font-mono text-white bg-blood/10 border border-blood px-4 py-2 sm:px-8 sm:py-3 rounded-sm hover:bg-blood hover:text-white transition-all duration-300 tracking-[0.1em] sm:tracking-[0.2em] text-[10px] sm:text-xs md:text-sm font-bold uppercase cursor-pointer"
             style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.5)', boxShadow: '0 0 15px rgba(220, 38, 38, 0.4) inset' }}
           >
             [ INITIALIZE PROTOCOL: CLICK TO CONTINUE ]
