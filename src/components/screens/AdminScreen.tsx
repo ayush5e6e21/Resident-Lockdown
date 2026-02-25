@@ -1,7 +1,118 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Activity, Users, Database, Server, Terminal, Play, RotateCcw, ArrowLeft, Zap } from 'lucide-react';
+import { Shield, Lock, Activity, Users, Database, Server, Terminal, Play, RotateCcw, ArrowLeft, Zap, Trash2, Plus, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
+
+function QuestionBankUI({ socket, serverData }: { socket: Socket | null; serverData: any }) {
+    const [selectedLevel, setSelectedLevel] = useState<1 | 2>(1);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [expandedQ, setExpandedQ] = useState<string | number | null>(null);
+    const [newQ, setNewQ] = useState({ question: '', options: ['', '', '', ''], correct: 0, explanation: '', timer: 30 });
+
+    const questions = selectedLevel === 1
+        ? (serverData?.questions?.level1 || [])
+        : (serverData?.questions?.level2 || []);
+
+    const handleAdd = () => {
+        if (!socket || !newQ.question.trim() || newQ.options.some(o => !o.trim())) return;
+        socket.emit('adminAddQuestion', { ...newQ, level: selectedLevel });
+        setNewQ({ question: '', options: ['', '', '', ''], correct: 0, explanation: '', timer: 30 });
+        setShowAddForm(false);
+        setTimeout(() => socket.emit('adminGetData'), 500);
+    };
+
+    const handleDelete = (id: string | number) => {
+        if (!socket || !window.confirm('Delete this question?')) return;
+        socket.emit('adminDeleteQuestion', { id, level: selectedLevel });
+        setTimeout(() => socket.emit('adminGetData'), 500);
+    };
+
+    return (
+        <div className="p-4 sm:p-6">
+            {/* Level Tabs */}
+            <div className="flex gap-2 mb-4">
+                {[1, 2].map(lvl => (
+                    <button key={lvl} onClick={() => { setSelectedLevel(lvl as 1 | 2); setExpandedQ(null); }}
+                        className={`flex-1 py-2 font-mono text-sm border transition-colors ${selectedLevel === lvl ? 'bg-blood/20 border-blood text-white' : 'border-border-gray text-text-dim hover:border-blood'}`}>
+                        LEVEL {lvl} ({lvl === 1 ? serverData?.questions?.level1?.length || 0 : serverData?.questions?.level2?.length || 0})
+                    </button>
+                ))}
+            </div>
+
+            {/* Questions List */}
+            <div className="max-h-[400px] overflow-y-auto space-y-2 mb-4">
+                {questions.length === 0 && (
+                    <div className="text-center p-8 text-text-muted font-mono text-sm">NO QUESTIONS FOR LEVEL {selectedLevel}</div>
+                )}
+                {questions.map((q: any, idx: number) => (
+                    <div key={q.id} className="bg-deep border border-border-gray">
+                        <div className="p-3 flex items-start justify-between gap-2 cursor-pointer" onClick={() => setExpandedQ(expandedQ === q.id ? null : q.id)}>
+                            <div className="flex-1 min-w-0">
+                                <span className="font-mono text-xs text-text-muted mr-2">Q{idx + 1}</span>
+                                <span className="font-mono text-sm text-text-bright">{q.question.length > 80 ? q.question.substring(0, 80) + '...' : q.question}</span>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                                <button onClick={(e) => { e.stopPropagation(); handleDelete(q.id); }}
+                                    className="p-1 text-text-dim hover:text-blood transition-colors" title="Delete">
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                                {expandedQ === q.id ? <ChevronUp className="w-4 h-4 text-text-dim" /> : <ChevronDown className="w-4 h-4 text-text-dim" />}
+                            </div>
+                        </div>
+                        {expandedQ === q.id && (
+                            <div className="px-3 pb-3 border-t border-border-gray pt-2 space-y-1">
+                                <p className="font-mono text-xs text-text-bright mb-2">{q.question}</p>
+                                {q.options?.map((opt: string, oi: number) => (
+                                    <div key={oi} className={`flex items-center gap-2 font-mono text-xs px-2 py-1 ${oi === q.correct ? 'text-toxic bg-toxic/10 border border-toxic/30' : 'text-text-dim'}`}>
+                                        {oi === q.correct && <Check className="w-3 h-3" />}
+                                        <span>{String.fromCharCode(65 + oi)}. {opt}</span>
+                                    </div>
+                                ))}
+                                {q.explanation && <p className="font-mono text-xs text-text-muted mt-2 italic">💡 {q.explanation}</p>}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Add Button / Form */}
+            {!showAddForm ? (
+                <button onClick={() => setShowAddForm(true)}
+                    className="w-full py-2 border border-dashed border-border-rust text-text-dim hover:border-blood hover:text-white transition-colors font-mono text-sm flex items-center justify-center gap-2">
+                    <Plus className="w-4 h-4" /> ADD QUESTION TO LEVEL {selectedLevel}
+                </button>
+            ) : (
+                <div className="border border-blood/30 bg-deep p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                        <h4 className="font-mono text-sm text-blood font-bold">NEW QUESTION — LEVEL {selectedLevel}</h4>
+                        <button onClick={() => setShowAddForm(false)} className="text-text-dim hover:text-white text-xs font-mono">CANCEL</button>
+                    </div>
+                    <textarea value={newQ.question} onChange={e => setNewQ({ ...newQ, question: e.target.value })}
+                        className="w-full bg-void-black border border-border-rust text-text-bright px-3 py-2 rounded font-mono text-sm focus:border-blood focus:outline-none resize-none h-16"
+                        placeholder="Enter question text..." />
+                    {newQ.options.map((opt, oi) => (
+                        <div key={oi} className="flex items-center gap-2">
+                            <button onClick={() => setNewQ({ ...newQ, correct: oi })}
+                                className={`w-7 h-7 shrink-0 border font-mono text-xs flex items-center justify-center ${newQ.correct === oi ? 'bg-toxic/20 border-toxic text-toxic' : 'border-border-gray text-text-dim hover:border-blood'}`}>
+                                {String.fromCharCode(65 + oi)}
+                            </button>
+                            <input value={opt} onChange={e => { const opts = [...newQ.options]; opts[oi] = e.target.value; setNewQ({ ...newQ, options: opts }); }}
+                                className="flex-1 bg-void-black border border-border-rust text-text-bright px-3 py-1.5 rounded font-mono text-sm focus:border-blood focus:outline-none"
+                                placeholder={`Option ${String.fromCharCode(65 + oi)}`} />
+                        </div>
+                    ))}
+                    <input value={newQ.explanation} onChange={e => setNewQ({ ...newQ, explanation: e.target.value })}
+                        className="w-full bg-void-black border border-border-rust text-text-bright px-3 py-1.5 rounded font-mono text-sm focus:border-blood focus:outline-none"
+                        placeholder="Explanation (optional)" />
+                    <button onClick={handleAdd} disabled={!newQ.question.trim() || newQ.options.some(o => !o.trim())}
+                        className="w-full py-2 bg-blood/20 border border-blood text-blood hover:bg-blood hover:text-white transition-colors font-mono text-sm tracking-widest disabled:opacity-30 disabled:cursor-not-allowed">
+                        SUBMIT QUESTION
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export function AdminScreen({ onClose, onAdminAuth }: { onClose: () => void; onAdminAuth: () => void }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -377,12 +488,7 @@ export function AdminScreen({ onClose, onAdminAuth }: { onClose: () => void; onA
                                         BACK TO CONTROL
                                     </button>
                                 </div>
-                                <div className="p-6">
-                                    <p className="font-mono text-sm text-text-dim mb-4">Total stored records: {(serverData?.questions?.level1?.length || 0) + (serverData?.questions?.level2?.length || 0)}</p>
-                                    <div className="bg-deep border border-border-gray p-4 text-sm font-mono text-text-muted h-64 flex items-center justify-center">
-                                        [ QUESTION MANAGEMENT DB IS CURRENTLY READ-ONLY VIA MAINFRAME ]
-                                    </div>
-                                </div>
+                                <QuestionBankUI socket={socket} serverData={serverData} />
                             </div>
                         )}
                     </div>
