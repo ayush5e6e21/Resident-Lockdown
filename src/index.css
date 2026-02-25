@@ -1,0 +1,756 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Ultra-Dark Cinematic Horror Palette */
+  --void-black: #020202;
+  --deep-black: #060606;
+  --panel-black: rgba(10, 10, 10, 0.85);
+  --border-gray: #1a1a1a;
+  --border-rust: #4a2511;
+  --text-dim: #444444;
+  --text-muted: #666666;
+  --text-bright: #d4d4d4;
+
+  /* Congealed Blood Red Accents */
+  --blood-red: #b91c1c;
+  --blood-glow: rgba(153, 27, 27, 0.6);
+  --blood-dark: #450a0a;
+  --blood-dim: #2a0505;
+
+  /* Sickly Bioluminescent Green */
+  --toxic-green: #15803d;
+  --toxic-glow: rgba(21, 128, 61, 0.5);
+  --toxic-dark: #052e16;
+
+  /* Rusted Hazard Amber */
+  --warning-amber: #b45309;
+  --warning-glow: rgba(180, 83, 9, 0.4);
+
+  /* Desaturated Metals for winners */
+  --gold: #b38822;
+  --silver: #8a8a8a;
+  --bronze: #8c5a2b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background-color: var(--void-black);
+  /* Intense dark vignette / Flashlight beam effect */
+  background-image: radial-gradient(circle at center, rgba(30, 30, 30, 0.4) 0%, var(--void-black) 85%);
+  color: var(--text-bright);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ==================== HEAVY CRT EFFECT ==================== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.25) 0px,
+      rgba(0, 0, 0, 0.25) 1px,
+      transparent 1px,
+      transparent 2px);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.6;
+}
+
+/* ==================== HORROR FILM GRAIN ==================== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ==================== GLITCH EFFECT ==================== */
+@keyframes glitch-1 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+
+  20% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(2px, -2px);
+  }
+
+  60% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-1px, 1px);
+  }
+
+  80% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes glitch-2 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+
+  20% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(2px, -2px);
+  }
+
+  40% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(-2px, 2px);
+  }
+
+  60% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(1px, -1px);
+  }
+
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-1px, 1px);
+  }
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch-text::before {
+  animation: glitch-1 3s infinite linear alternate-reverse;
+  color: var(--blood-red);
+  z-index: -1;
+}
+
+.glitch-text::after {
+  animation: glitch-2 2s infinite linear alternate-reverse;
+  color: var(--toxic-green);
+  z-index: -2;
+}
+
+/* ==================== PULSE ANIMATIONS ==================== */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--blood-glow), 0 0 10px var(--blood-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 15px var(--blood-glow), 0 0 30px var(--blood-glow);
+  }
+}
+
+@keyframes pulse-text {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes heartbeat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  10%,
+  30% {
+    transform: scale(1.1);
+  }
+
+  20%,
+  40% {
+    transform: scale(1);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.pulse-text {
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+
+.heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* ==================== WARNING FLASH ==================== */
+@keyframes warning-pulse {
+
+  0%,
+  100% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: rgba(220, 38, 38, 0.08);
+  }
+}
+
+.warning-active {
+  animation: warning-pulse 0.8s ease-in-out infinite;
+}
+
+/* ==================== SCAN LINE ==================== */
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blood-red), transparent);
+  animation: scan 6s linear infinite;
+  z-index: 998;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ==================== TYPING CURSOR ==================== */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: '▋';
+  animation: blink 1s step-end infinite;
+  color: var(--blood-red);
+  margin-left: 2px;
+}
+
+/* ==================== PANEL/TERMINAL STYLES ==================== */
+.panel {
+  background: var(--panel-black);
+  border: 1px solid var(--border-rust);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.8),
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Worn corner accents */
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-rust);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.panel::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.panel::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.panel-header {
+  background: linear-gradient(90deg, var(--blood-dim), #1a0505, transparent);
+  padding: 12px 20px;
+  border-bottom: 2px solid var(--border-rust);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-bright);
+  text-shadow: 0 0 5px var(--blood-glow);
+  position: relative;
+}
+
+/* Hazard tape added to panel headers */
+.panel-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(45deg,
+      var(--warning-amber),
+      var(--warning-amber) 10px,
+      #000 10px,
+      #000 20px);
+  opacity: 0.7;
+}
+
+/* ==================== INFECTION BAR ==================== */
+.infection-bar {
+  height: 28px;
+  background: #000;
+  border: 2px solid var(--border-rust);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.infection-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg,
+      transparent,
+      transparent 8px,
+      rgba(0, 0, 0, 0.5) 8px,
+      rgba(0, 0, 0, 0.5) 16px);
+  z-index: 2;
+}
+
+.infection-fill {
+  height: 100%;
+  border-radius: 0;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 0 15px var(--blood-glow);
+}
+
+.infection-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+}
+
+/* ==================== BUTTON STYLES ==================== */
+.btn-primary {
+  position: relative;
+  padding: 14px 32px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: var(--blood-dim);
+  border: 1px solid var(--blood-red);
+  color: var(--text-bright);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  background: var(--blood-red);
+  color: #fff;
+  box-shadow: 0 0 30px var(--blood-glow);
+  border-color: #ff4444;
+}
+
+.btn-primary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: var(--border-rust);
+  background: var(--void-black);
+  color: var(--text-dim);
+}
+
+/* ==================== OPTION BUTTONS ==================== */
+.option-card {
+  position: relative;
+  padding: 18px 24px;
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid var(--border-rust);
+  border-radius: 2px;
+  color: var(--text-bright);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+.option-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--blood-red);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
+.option-card:hover::before {
+  transform: scaleY(1);
+}
+
+.option-card:hover {
+  background: var(--blood-dim);
+  border-color: var(--blood-red);
+  transform: translateX(4px);
+  box-shadow: 0 0 15px var(--blood-glow), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.option-card.correct {
+  background: rgba(21, 128, 61, 0.2);
+  border-color: var(--toxic-green);
+  box-shadow: 0 0 20px var(--toxic-glow);
+}
+
+.option-card.correct::before {
+  background: var(--toxic-green);
+  transform: scaleY(1);
+}
+
+.option-card.wrong {
+  background: rgba(153, 27, 27, 0.3);
+  border-color: var(--blood-red);
+  box-shadow: 0 0 20px var(--blood-glow);
+  /* Shake animation for wrong answer */
+  animation: error-shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes error-shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.option-card.wrong::before {
+  background: var(--blood-red);
+  transform: scaleY(1);
+}
+
+.option-card:disabled {
+  cursor: default;
+}
+
+.option-card:disabled:hover {
+  transform: none;
+}
+
+/* ==================== LEADERBOARD ==================== */
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.leaderboard-item:hover {
+  background: rgba(153, 27, 27, 0.1);
+  border-color: var(--border-rust);
+}
+
+.leaderboard-item.current-player {
+  background: rgba(153, 27, 27, 0.2);
+  border: 1px solid var(--blood-red);
+  box-shadow: 0 0 10px var(--blood-glow);
+}
+
+.rank-1 {
+  color: var(--gold);
+  text-shadow: 0 0 5px var(--gold);
+}
+
+.rank-2 {
+  color: var(--silver);
+  text-shadow: 0 0 5px var(--silver);
+}
+
+.rank-3 {
+  color: var(--bronze);
+  text-shadow: 0 0 5px var(--bronze);
+}
+
+/* ==================== COUNTDOWN ==================== */
+.countdown-display {
+  font-family: 'Orbitron', monospace;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  line-height: 1;
+}
+
+.countdown-display.critical {
+  color: var(--blood-red);
+  animation: heartbeat 0.8s ease-in-out infinite;
+  text-shadow: 0 0 20px var(--blood-glow);
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-gray);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blood-dark);
+}
+
+/* ==================== SELECTION ==================== */
+::selection {
+  background: var(--blood-red);
+  color: var(--void-black);
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.font-rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.font-mono {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.text-blood {
+  color: var(--blood-red);
+}
+
+.text-toxic {
+  color: var(--toxic-green);
+}
+
+.text-amber {
+  color: var(--warning-amber);
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.bg-void {
+  background-color: var(--void-black);
+}
+
+.bg-deep {
+  background-color: var(--deep-black);
+}
+
+.bg-panel {
+  background-color: var(--panel-black);
+}
+
+.border-blood {
+  border-color: var(--blood-red);
+}
+
+/* ==================== HEXAGON / BIOHAZARD BACKGROUND ==================== */
+.hex-bg {
+  background-color: var(--void-black);
+  background-image:
+    radial-gradient(var(--border-rust) 1px, transparent 1px),
+    radial-gradient(var(--blood-dim) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.8;
+}
+
+/* ==================== GRID OVERLAY ==================== */
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(180, 83, 9, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 83, 9, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+}
+
+/* ==================== GLOW EFFECTS ==================== */
+.glow-blood {
+  box-shadow: 0 0 30px var(--blood-glow);
+}
+
+.glow-toxic {
+  box-shadow: 0 0 30px var(--toxic-glow);
+}
+
+.text-glow-blood {
+  text-shadow: 0 0 15px var(--blood-glow);
+}
+
+.text-glow-toxic {
+  text-shadow: 0 0 15px var(--toxic-glow);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .countdown-display {
+    font-size: 2.5rem;
+  }
+
+  .option-card {
+    padding: 14px 18px;
+    font-size: 1rem;
+  }
+
+  .btn-primary {
+    padding: 12px 24px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.4s ease-out forwards;
+}
