@@ -1,4 +1,5 @@
 import { GameProvider, useGame } from '@/context/GameContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LandingScreen } from '@/components/screens/LandingScreen';
 import { RegisterScreen } from '@/components/screens/RegisterScreen';
 import { LobbyScreen } from '@/components/screens/LobbyScreen';
@@ -183,8 +184,8 @@ function GameContent() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: -20 }}
                 className={`pointer-events-auto max-w-sm mx-4 p-4 sm:p-6 border-2 text-center ${antiCheatWarning.type === 'penalty'
-                    ? 'bg-blood-dark/95 border-blood'
-                    : 'bg-void-black/95 border-amber'
+                  ? 'bg-blood-dark/95 border-blood'
+                  : 'bg-void-black/95 border-amber'
                   }`}
               >
                 <AlertTriangle className={`w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 ${antiCheatWarning.type === 'penalty' ? 'text-blood' : 'text-amber'
@@ -202,8 +203,8 @@ function GameContent() {
                       <div
                         key={i}
                         className={`w-3 h-3 rounded-full border ${i <= antiCheatWarning.offenseCount
-                            ? 'bg-amber border-amber'
-                            : 'border-text-dim bg-transparent'
+                          ? 'bg-amber border-amber'
+                          : 'border-text-dim bg-transparent'
                           }`}
                       />
                     ))}
@@ -228,9 +229,11 @@ function GameContent() {
 
 function App() {
   return (
-    <GameProvider>
-      <GameContent />
-    </GameProvider>
+    <ErrorBoundary>
+      <GameProvider>
+        <GameContent />
+      </GameProvider>
+    </ErrorBoundary>
   );
 }
 
