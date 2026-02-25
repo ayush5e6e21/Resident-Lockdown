@@ -8,6 +8,9 @@ interface TrailPoint {
 
 export function CursorTrail() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const trailRef = useRef<TrailPoint[]>([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     // Detect touch-only devices (no hover capability)
@@ -18,13 +21,10 @@ export function CursorTrail() {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Skip the entire canvas animation on touch devices
-  if (isTouchDevice) return null;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const trailRef = useRef<TrailPoint[]>([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
-
   useEffect(() => {
+    // Skip the entire canvas animation on touch devices
+    if (isTouchDevice) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -119,7 +119,10 @@ export function CursorTrail() {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [isTouchDevice]);
+
+  // Don't render canvas on touch devices
+  if (isTouchDevice) return null;
 
   return (
     <canvas
