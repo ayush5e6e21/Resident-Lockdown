@@ -574,7 +574,8 @@ io.on('connection', (socket) => {
       questionIndex: 0,
       completed: false,
       completionTime: null,
-      completionOrder: 0
+      completionOrder: 0,
+      tabSwitchCount: 0
     };
 
     gameState.players.set(playerId, player);
@@ -658,6 +659,7 @@ io.on('connection', (socket) => {
       player.completed = false;
       player.completionTime = null;
       player.completionOrder = 0;
+      player.tabSwitchCount = 0;
     });
 
     updateLeaderboard();
@@ -811,6 +813,45 @@ io.on('connection', (socket) => {
     }));
 
     socket.emit('adminExportData', csvData);
+  });
+
+  // ---- ANTI-CHEAT: TAB SWITCH DETECTION ----
+  socket.on('tabSwitch', () => {
+    const player = gameState.players.get(socket.playerId);
+    if (!player || player.eliminated || !gameState.isActive || gameState.currentLevel === 0) return;
+
+    player.tabSwitchCount = (player.tabSwitchCount || 0) + 1;
+    const count = player.tabSwitchCount;
+
+    if (count <= 3) {
+      // Warn the player
+      socket.emit('antiCheatWarning', {
+        offenseCount: count,
+        maxWarnings: 3,
+        message: count === 3
+          ? 'FINAL WARNING: Next tab switch will result in point deductions!'
+          : `WARNING ${count}/3: Tab switching detected. Stay in the game!`
+      });
+      addSystemMessage(`⚠ ${player.name} switched tabs (${count}/3 warnings)`, 'warning');
+    } else {
+      // Deduct points after 3rd offense
+      const penalty = -50;
+      player.score += penalty;
+      socket.emit('antiCheatPenalty', {
+        offenseCount: count,
+        penalty: penalty,
+        newScore: player.score,
+        message: `PENALTY: ${penalty} points! Tab switching is not allowed.`
+      });
+      addSystemMessage(`🚨 ${player.name} penalized ${penalty} pts for tab switching (offense #${count})`, 'elimination');
+
+      // Check if player should be eliminated (score too low)
+      if (player.score <= -10) {
+        eliminatePlayer(player.id, 'Excessive tab switching - anti-cheat violation');
+      }
+
+      updateLeaderboard();
+    }
   });
 
   // Disconnect handler

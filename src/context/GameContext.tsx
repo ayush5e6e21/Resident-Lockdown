@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import type { Player, Question, LeaderboardEntry, GameScreen } from '@/types/game';
 
 // Context Provider
+
+interface AntiCheatWarning {
+  message: string;
+  type: 'warning' | 'penalty';
+  offenseCount: number;
+}
 
 interface GameContextType {
   screen: GameScreen;
@@ -16,6 +22,7 @@ interface GameContextType {
   hasCompletedQuestions: boolean;
   survivors: { id: string; name: string; score: number }[];
   isSurvivor: boolean;
+  antiCheatWarning: AntiCheatWarning | null;
   setScreen: (screen: GameScreen) => void;
   registerPlayer: (name: string) => void;
   startGame: () => void;
@@ -39,6 +46,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [hasCompletedQuestions, setHasCompletedQuestions] = useState(false);
   const [survivors, setSurvivors] = useState<{ id: string; name: string; score: number }[]>([]);
+  const [antiCheatWarning, setAntiCheatWarning] = useState<AntiCheatWarning | null>(null);
+
+  // Refs for visibility change handler (avoids stale closures)
+  const socketRef = useRef<Socket | null>(null);
+  const screenRef = useRef<GameScreen>(screen);
+  const playerRef = useRef<Player | null>(player);
+
+  useEffect(() => { socketRef.current = socket; }, [socket]);
+  useEffect(() => { screenRef.current = screen; }, [screen]);
+  useEffect(() => { playerRef.current = player; }, [player]);
 
   // Initialize socket connection
   useEffect(() => {
@@ -51,12 +68,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setLeaderboard(state.leaderboard || []);
       setCurrentLevel(state.currentLevel);
       if (state.isActive && state.currentLevel > 0) {
-        // Don't override eliminated players' screen
         setPlayer(prev => {
           if (prev && prev.eliminated) return prev;
           return prev;
         });
-        // Only change screen if player is not eliminated
         setScreen(prev => {
           if (prev === 'eliminated') return prev;
           return `level${state.currentLevel}` as GameScreen;
@@ -97,7 +112,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setCurrentQuestionIndex(0);
       setLastAnswer(null);
       setHasCompletedQuestions(false);
-      // Don't send eliminated players to a new level
       setScreen(prev => {
         if (prev === 'eliminated') return prev;
         return `level${data.level}` as GameScreen;
@@ -105,11 +119,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     });
 
     newSocket.on('level1Complete', (data) => {
-      // Store survivors list
       if (data && data.survivors) {
         setSurvivors(data.survivors);
       }
-      // Don't send eliminated players to transition
       setScreen(prev => {
         if (prev === 'eliminated') return prev;
         return 'transition';
@@ -120,7 +132,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setCurrentQuestion(data.question);
       setCurrentQuestionIndex(data.questionNumber - 1);
       setTotalQuestions(data.totalQuestions);
-      setLastAnswer(null); // Reset answer state for new question
+      setLastAnswer(null);
     });
 
     newSocket.on('gameEnd', () => {
@@ -148,11 +160,50 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setCurrentQuestion(null);
       setHasCompletedQuestions(false);
       setSurvivors([]);
+      setAntiCheatWarning(null);
+    });
+
+    // ---- ANTI-CHEAT: Server responses ----
+    newSocket.on('antiCheatWarning', (data) => {
+      setAntiCheatWarning({
+        message: data.message,
+        type: 'warning',
+        offenseCount: data.offenseCount
+      });
+      setTimeout(() => setAntiCheatWarning(null), 4000);
+    });
+
+    newSocket.on('antiCheatPenalty', (data) => {
+      setAntiCheatWarning({
+        message: data.message,
+        type: 'penalty',
+        offenseCount: data.offenseCount
+      });
+      setPlayer(prev => prev ? { ...prev, score: data.newScore } : null);
+      setTimeout(() => setAntiCheatWarning(null), 5000);
     });
 
     return () => {
       newSocket.disconnect();
     };
+  }, []);
+
+  // ---- ANTI-CHEAT: Tab visibility detection ----
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        const sock = socketRef.current;
+        const scr = screenRef.current;
+        const plr = playerRef.current;
+        // Only report during active gameplay (level1/level2)
+        if (sock && plr && !plr.eliminated && (scr === 'level1' || scr === 'level2')) {
+          sock.emit('tabSwitch');
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   const registerPlayer = useCallback((name: string) => {
@@ -196,6 +247,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       hasCompletedQuestions,
       survivors,
       isSurvivor: !!(player && survivors.find(s => s.id === player.id)),
+      antiCheatWarning,
       setScreen,
       registerPlayer,
       startGame,

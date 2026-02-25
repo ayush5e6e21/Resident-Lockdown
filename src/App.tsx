@@ -11,9 +11,10 @@ import { AdminScreen } from '@/components/screens/AdminScreen';
 import { CursorTrail } from '@/components/effects/CursorTrail';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
 
 function GameContent() {
-  const { screen, setScreen } = useGame();
+  const { screen, setScreen, antiCheatWarning } = useGame();
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -162,6 +163,53 @@ function GameContent() {
                 onClose={() => setIsAdminOpen(false)}
                 onAdminAuth={() => setIsAdmin(true)}
               />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Anti-Cheat Warning Overlay */}
+        <AnimatePresence>
+          {antiCheatWarning && (
+            <motion.div
+              key="anticheat-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none"
+            >
+              <motion.div
+                initial={{ scale: 0.8, y: -20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: -20 }}
+                className={`pointer-events-auto max-w-sm mx-4 p-4 sm:p-6 border-2 text-center ${antiCheatWarning.type === 'penalty'
+                    ? 'bg-blood-dark/95 border-blood'
+                    : 'bg-void-black/95 border-amber'
+                  }`}
+              >
+                <AlertTriangle className={`w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 ${antiCheatWarning.type === 'penalty' ? 'text-blood' : 'text-amber'
+                  }`} />
+                <h3 className={`font-orbitron text-base sm:text-lg font-bold mb-2 ${antiCheatWarning.type === 'penalty' ? 'text-blood' : 'text-amber'
+                  }`}>
+                  {antiCheatWarning.type === 'penalty' ? '⚠ PENALTY APPLIED' : '⚠ ANTI-CHEAT WARNING'}
+                </h3>
+                <p className="font-mono text-xs sm:text-sm text-text-bright">
+                  {antiCheatWarning.message}
+                </p>
+                {antiCheatWarning.type === 'warning' && (
+                  <div className="mt-3 flex justify-center gap-1">
+                    {[1, 2, 3].map(i => (
+                      <div
+                        key={i}
+                        className={`w-3 h-3 rounded-full border ${i <= antiCheatWarning.offenseCount
+                            ? 'bg-amber border-amber'
+                            : 'border-text-dim bg-transparent'
+                          }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
