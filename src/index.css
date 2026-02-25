@@ -53,8 +53,12 @@ body {
   background-image: radial-gradient(circle at center, rgba(30, 30, 30, 0.4) 0%, var(--void-black) 85%);
   color: var(--text-bright);
   min-height: 100vh;
+  min-height: 100dvh;
+  /* Fix for mobile Safari address bar */
   overflow-x: hidden;
   line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* ==================== HEAVY CRT EFFECT ==================== */
@@ -68,7 +72,7 @@ body::before {
       transparent 1px,
       transparent 2px);
   pointer-events: none;
-  z-index: 1000;
+  z-index: 99;
   opacity: 0.6;
 }
 
@@ -81,7 +85,7 @@ body::after {
   opacity: 0.05;
   mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 999;
+  z-index: 98;
 }
 
 /* ==================== GLITCH EFFECT ==================== */
@@ -262,7 +266,7 @@ body::after {
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--blood-red), transparent);
   animation: scan 6s linear infinite;
-  z-index: 998;
+  z-index: 97;
   pointer-events: none;
   opacity: 0.5;
 }
@@ -850,6 +854,7 @@ body::after {
 
 /* --- Reduced Motion preference --- */
 @media (prefers-reduced-motion: reduce) {
+
   .pulse-glow,
   .pulse-text,
   .heartbeat,

@@ -7,7 +7,13 @@ interface TrailPoint {
 }
 
 export function CursorTrail() {
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(() => {
+    // Synchronous initial detection — no flash of canvas on mobile
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(hover: none)').matches;
+    }
+    return false;
+  });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailRef = useRef<TrailPoint[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
