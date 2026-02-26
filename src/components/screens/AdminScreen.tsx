@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Activity, Users, Database, Server, Terminal, Play, RotateCcw, ArrowLeft, Zap, Trash2, Plus, ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { Shield, Lock, Activity, Users, Database, Server, Terminal, Play, RotateCcw, ArrowLeft, Zap, Trash2, Plus, ChevronDown, ChevronUp, Check, AlertTriangle } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 
 function QuestionBankUI({ socket, serverData }: { socket: Socket | null; serverData: any }) {
@@ -346,6 +346,19 @@ export function AdminScreen({ onClose, onAdminAuth }: { onClose: () => void; onA
                                         >
                                             <Zap className="w-4 h-4 inline mr-2" />
                                             START LEVEL 2
+                                        </button>
+                                    )}
+                                    {serverData?.settings?.isActive && (
+                                        <button
+                                            onClick={() => {
+                                                if (socket && window.confirm('Force end current level and trigger shortlisting? Players who haven\'t finished will be ranked with their current score.')) {
+                                                    socket.emit('adminForceEndLevel');
+                                                }
+                                            }}
+                                            className="flex-1 btn-primary bg-amber-900/50 border-amber-500 text-amber-400 hover:bg-amber-700 hover:text-white"
+                                        >
+                                            <AlertTriangle className="w-4 h-4 inline mr-2" />
+                                            FORCE END LEVEL
                                         </button>
                                     )}
                                     <button onClick={resetGame} className="flex-1 btn-primary tracking-widest">

@@ -258,6 +258,10 @@ function startLevel1() {
 
   // Reset per-player question state
   gameState.players.forEach(player => {
+    if (player.autoAdvanceTimer) {
+      clearTimeout(player.autoAdvanceTimer);
+      player.autoAdvanceTimer = null;
+    }
     player.questionIndex = 0;
     player.completed = false;
     player.completionTime = null;
@@ -295,6 +299,10 @@ function startLevel2() {
 
   // Reset per-player question state for level 2
   survivors.forEach(player => {
+    if (player.autoAdvanceTimer) {
+      clearTimeout(player.autoAdvanceTimer);
+      player.autoAdvanceTimer = null;
+    }
     player.questionIndex = 0;
     player.completed = false;
     player.completionTime = null;
@@ -423,8 +431,9 @@ function sendNextQuestionToPlayer(player) {
       player.infectionLevel += 20;
       if (player.infectionLevel >= 100) {
         eliminatePlayer(player.id, 'Failed to respond in time');
+        checkAllPlayersCompleted();
       } else {
-        // Send timeout result — player must manually click NEXT QUERY
+        // Send timeout result
         const questions = gameState.currentLevel === 1 ? gameState.questions.level1 : gameState.questions.level2;
         const timedOutQuestion = questions[player.questionIndex];
         if (player.socketId) {
@@ -440,6 +449,13 @@ function sendNextQuestionToPlayer(player) {
           }
         }
         player.questionIndex++;
+        // Auto-advance to next question after 3s so AFK players don't block the game
+        player.autoAdvanceTimer = setTimeout(() => {
+          player.autoAdvanceTimer = null;
+          if (!player.eliminated && !player.completed && gameState.isActive) {
+            sendNextQuestionToPlayer(player);
+          }
+        }, 3000);
       }
       updateLeaderboard();
     }
@@ -448,7 +464,8 @@ function sendNextQuestionToPlayer(player) {
 
 function checkAllPlayersCompleted() {
   const activePlayers = Array.from(gameState.players.values()).filter(p => !p.eliminated);
-  const allCompleted = activePlayers.every(p => p.completed);
+  // Disconnected players should not block shortlisting
+  const allCompleted = activePlayers.every(p => p.completed || p.status === 'DISCONNECTED');
 
   if (allCompleted) {
     if (gameState.currentLevel === 1) {
@@ -464,6 +481,13 @@ function endLevel1() {
   gameState.level1Ended = true;
 
   addSystemMessage('LEVEL 1 COMPLETE. PROCESSING SURVIVORS...', 'info');
+
+  // Eliminate disconnected players first — they should not take shortlist spots
+  gameState.players.forEach(player => {
+    if (!player.eliminated && player.status === 'DISCONNECTED') {
+      eliminatePlayer(player.id, 'Disconnected during Level 1');
+    }
+  });
 
   // Top 10 advance
   const advanceCount = 10;
@@ -509,6 +533,13 @@ function endLevel1() {
 function endGame() {
   gameState.isActive = false;
 
+  // Eliminate disconnected players first
+  gameState.players.forEach(player => {
+    if (!player.eliminated && player.status === 'DISCONNECTED') {
+      eliminatePlayer(player.id, 'Disconnected during Level 2');
+    }
+  });
+
   const winners = Array.from(gameState.players.values())
     .filter(p => !p.eliminated)
     .sort((a, b) => {
@@ -548,6 +579,13 @@ function resetGame() {
   gameState.isActive = false;
   gameState.currentLevel = 0;
   gameState.level1Ended = false;
+  // Clear any pending auto-advance timers before clearing players
+  gameState.players.forEach(player => {
+    if (player.autoAdvanceTimer) {
+      clearTimeout(player.autoAdvanceTimer);
+      player.autoAdvanceTimer = null;
+    }
+  });
   gameState.players.clear();
   gameState.eliminatedPlayers = [];
   gameState.leaderboard = [];
@@ -625,6 +663,7 @@ io.on('connection', (socket) => {
       if (player.infectionLevel >= 100) {
         eliminatePlayer(player.id, 'Infection level critical');
         updateLeaderboard();
+        checkAllPlayersCompleted();
         return;
       }
     }
@@ -639,9 +678,16 @@ io.on('connection', (socket) => {
 
     updateLeaderboard();
 
-    // Player's questionIndex is incremented but NOT auto-advanced.
-    // The player must manually request the next question.
+    // Player's questionIndex is incremented
     player.questionIndex++;
+
+    // Auto-advance to next question (or completion) after 5s if player doesn't click NEXT QUERY
+    player.autoAdvanceTimer = setTimeout(() => {
+      player.autoAdvanceTimer = null;
+      if (!player.eliminated && !player.completed && gameState.isActive) {
+        sendNextQuestionToPlayer(player);
+      }
+    }, 5000);
   });
 
   // Manual next question request from player
@@ -649,6 +695,12 @@ io.on('connection', (socket) => {
     const player = gameState.players.get(socket.playerId);
     if (!player || player.eliminated || player.completed) return;
     if (!gameState.isActive) return;
+
+    // Cancel any pending auto-advance timer since player manually advanced
+    if (player.autoAdvanceTimer) {
+      clearTimeout(player.autoAdvanceTimer);
+      player.autoAdvanceTimer = null;
+    }
 
     sendNextQuestionToPlayer(player);
   });
@@ -888,8 +940,21 @@ io.on('connection', (socket) => {
       if (player.score <= -10) {
         eliminatePlayer(player.id, 'Excessive tab switching - anti-cheat violation');
       }
-
       updateLeaderboard();
+    }
+  });
+
+  // Admin force-end current level (triggers shortlisting immediately)
+  socket.on('adminForceEndLevel', () => {
+    if (!gameState.isActive) {
+      socket.emit('adminError', 'No active game to end');
+      return;
+    }
+    addSystemMessage('ADMIN OVERRIDE: FORCE-ENDING CURRENT LEVEL.', 'warning');
+    if (gameState.currentLevel === 1) {
+      endLevel1();
+    } else if (gameState.currentLevel === 2) {
+      endGame();
     }
   });
 
@@ -901,6 +966,10 @@ io.on('connection', (socket) => {
       if (player && !player.eliminated) {
         player.status = 'DISCONNECTED';
         updateLeaderboard();
+        // Re-check: if this was the last player blocking completion, trigger shortlist
+        if (gameState.isActive) {
+          checkAllPlayersCompleted();
+        }
       }
     }
   });
