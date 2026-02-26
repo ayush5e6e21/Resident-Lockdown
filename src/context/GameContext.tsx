@@ -22,6 +22,7 @@ interface GameContextType {
   hasCompletedQuestions: boolean;
   survivors: { id: string; name: string; score: number }[];
   isSurvivor: boolean;
+  questionTimer: number;
   antiCheatWarning: AntiCheatWarning | null;
   setScreen: (screen: GameScreen) => void;
   registerPlayer: (name: string) => void;
@@ -47,6 +48,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [hasCompletedQuestions, setHasCompletedQuestions] = useState(false);
   const [survivors, setSurvivors] = useState<{ id: string; name: string; score: number }[]>([]);
   const [antiCheatWarning, setAntiCheatWarning] = useState<AntiCheatWarning | null>(null);
+  const [questionTimer, setQuestionTimer] = useState(30);
 
   // Refs for visibility change handler (avoids stale closures)
   const socketRef = useRef<Socket | null>(null);
@@ -114,6 +116,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setCurrentQuestionIndex(0);
       setLastAnswer(null);
       setHasCompletedQuestions(false);
+      if (data.timer) setQuestionTimer(data.timer);
       setScreen(prev => {
         if (prev === 'eliminated') return prev;
         return `level${data.level}` as GameScreen;
@@ -134,6 +137,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setCurrentQuestion(data.question);
       setCurrentQuestionIndex(data.questionNumber - 1);
       setTotalQuestions(data.totalQuestions);
+      if (data.timer) setQuestionTimer(data.timer);
       setLastAnswer(null);
     });
 
@@ -252,6 +256,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       survivors,
       isSurvivor: !!(player && survivors.find(s => s.id === player.id)),
       antiCheatWarning,
+      questionTimer,
       setScreen,
       registerPlayer,
       startGame,

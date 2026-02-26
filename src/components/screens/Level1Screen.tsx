@@ -13,7 +13,8 @@ export function Level1Screen() {
     totalQuestions,
     currentQuestionIndex,
     hasCompletedQuestions,
-    nextQuestion
+    nextQuestion,
+    questionTimer
   } = useGame();
 
   const [timeLeft, setTimeLeft] = useState(30);
@@ -26,7 +27,7 @@ export function Level1Screen() {
   useEffect(() => {
     if (!currentQuestion || hasAnswered) return;
 
-    setTimeLeft(30);
+    setTimeLeft(questionTimer);
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -325,7 +326,7 @@ export function Level1Screen() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      NEXT QUESTION
+                      NEXT QUERY
                       <ChevronRight className="w-5 h-5" />
                     </motion.button>
                   </div>
