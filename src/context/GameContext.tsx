@@ -225,8 +225,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [socket]);
 
   const nextQuestion = useCallback(() => {
-    // Players no longer manually control next question pacing; server does it on time expiry.
-  }, []);
+    if (socket) {
+      socket.emit('requestNextQuestion');
+    }
+  }, [socket]);
 
   const resetGame = useCallback(() => {
     setScreen('landing');

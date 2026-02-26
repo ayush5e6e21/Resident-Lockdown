@@ -624,13 +624,18 @@ io.on('connection', (socket) => {
 
     updateLeaderboard();
 
-    // Auto-advance to next question for this player
+    // Player's questionIndex is incremented but NOT auto-advanced.
+    // The player must manually request the next question.
     player.questionIndex++;
-    setTimeout(() => {
-      if (!player.eliminated && !player.completed) {
-        sendNextQuestionToPlayer(player);
-      }
-    }, 2000); // 2s delay to read the answer result
+  });
+
+  // Manual next question request from player
+  socket.on('requestNextQuestion', () => {
+    const player = gameState.players.get(socket.playerId);
+    if (!player || player.eliminated || player.completed) return;
+    if (!gameState.isActive) return;
+
+    sendNextQuestionToPlayer(player);
   });
 
   // Admin controls

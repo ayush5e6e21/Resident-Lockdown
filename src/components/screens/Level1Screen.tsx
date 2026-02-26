@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '@/context/GameContext';
-import { Clock, Activity, CheckCircle, XCircle, AlertTriangle, Trophy } from 'lucide-react';
+import { Clock, Activity, CheckCircle, XCircle, AlertTriangle, Trophy, ChevronRight } from 'lucide-react';
 
 export function Level1Screen() {
   const {
@@ -12,7 +12,8 @@ export function Level1Screen() {
     lastAnswer,
     totalQuestions,
     currentQuestionIndex,
-    hasCompletedQuestions
+    hasCompletedQuestions,
+    nextQuestion
   } = useGame();
 
   const [timeLeft, setTimeLeft] = useState(30);
@@ -317,14 +318,16 @@ export function Level1Screen() {
                       </p>
                     </div>
                   </div>
-                  <div className="p-4 border-t border-border-gray flex items-center justify-center gap-2 text-text-dim font-mono text-sm">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                  <div className="p-4 border-t border-border-gray">
+                    <motion.button
+                      onClick={nextQuestion}
+                      className="w-full py-3 bg-blood/10 border border-blood text-blood hover:bg-blood hover:text-white transition-colors font-orbitron text-sm tracking-widest flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <Activity className="w-4 h-4" />
-                    </motion.div>
-                    LOADING NEXT QUERY...
+                      NEXT QUESTION
+                      <ChevronRight className="w-5 h-5" />
+                    </motion.button>
                   </div>
                 </motion.div>
               )}
