@@ -69,14 +69,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     newSocket.on('gameState', (state) => {
       setLeaderboard(state.leaderboard || []);
       setCurrentLevel(state.currentLevel);
+      // Only redirect to level screen if the user is an already-registered player.
+      // Fresh visitors (no player) should stay on landing/register.
       if (state.isActive && state.currentLevel > 0) {
         setPlayer(prev => {
-          if (prev && prev.eliminated) return prev;
+          if (!prev || prev.eliminated) return prev;
+          // Player exists and game is active — update screen
+          setScreen(prevScreen => {
+            if (prevScreen === 'eliminated') return prevScreen;
+            return `level${state.currentLevel}` as GameScreen;
+          });
           return prev;
-        });
-        setScreen(prev => {
-          if (prev === 'eliminated') return prev;
-          return `level${state.currentLevel}` as GameScreen;
         });
       }
     });
