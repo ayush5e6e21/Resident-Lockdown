@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '@/context/GameContext';
 import { Clock, Activity, CheckCircle, XCircle, AlertTriangle, Trophy, ChevronRight } from 'lucide-react';
@@ -20,6 +20,7 @@ export function Level1Screen() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentQuestion = getCurrentQuestion();
 
@@ -32,23 +33,27 @@ export function Level1Screen() {
     if (!currentQuestion) return;
 
     setTimeLeft(questionTimer);
-    const timer = setInterval(() => {
+    timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
-          clearInterval(timer);
+          if (timerRef.current) clearInterval(timerRef.current);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [currentQuestion?.id, questionTimer]);
 
   const handleAnswer = (index: number) => {
     if (hasAnswered) return;
     setSelectedAnswer(index);
     setHasAnswered(true);
+    // Stop the timer immediately when user answers
+    if (timerRef.current) clearInterval(timerRef.current);
     submitAnswer(index);
   };
 
