@@ -47,45 +47,43 @@ const gameState = {
 const defaultLevel1Questions = [
   {
     id: 1,
-    question: "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",
-    options: ["A ghost", "An echo", "A shadow", "A thought"],
-    correct: 1,
-    explanation: "An echo speaks without a mouth and has no physical body."
+    question: "A virus has a 50% fatality rate. It spreads to the entire population in 10 days. On which day is HALF the population infected?",
+    options: ["Day 5", "Day 8", "Day 9", "Day 10"],
+    correct: 2,
+    explanation: "The virus spreads exponentially. If it takes 10 days to infect the entire population, it would take 9 days to infect half of it."
   },
   {
     id: 2,
-    question: "A man is looking at a photograph. Someone asks, 'Whose picture is that?' He replies: 'Brothers and sisters I have none, but that man's father is my father's son.' Who is in the photograph?",
-    options: ["The man himself", "His father", "His son", "His uncle"],
-    correct: 2,
-    explanation: "'My father's son' = himself (he has no brothers). So 'that man's father is me' — the photo is of his son."
+    question: "In long isolation, what collapses first in most humans?",
+    options: ["Rational thinking", "Emotional stability", "Physical endurance", "Immune response"],
+    correct: 1,
+    explanation: "Emotional Stability is the first to collapse in long isolation."
   },
   {
     id: 3,
-    question: "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
-    options: ["A planet", "A map", "A painting", "A dream"],
-    correct: 1,
-    explanation: "A map has representations of cities, mountains, and water — but none of the real things."
+    question: "If fear spreads faster than the virus, and misinformation spreads faster than fear, what is the first thing to control in an outbreak?",
+    options: ["Hospitals", "Borders", "Information", "Supplies"],
+    correct: 2,
+    explanation: "Information is the first thing to control in an outbreak. Misinformation spreads faster than fear, so controlling the flow of information is critical."
   },
   {
     id: 4,
-    question: "What number comes next? 1, 11, 21, 1211, 111221, ?",
-    options: ["312211", "122211", "212221", "331221"],
+    question: "A virus mutates randomly. Which factor increases mutation rate the MOST?",
+    options: ["High transmission", "High mortality", "Low immunity", "High temperature"],
     correct: 0,
-    explanation: "Look-and-say sequence: each term describes the previous. 111221 = 'three 1s, two 2s, one 1' = 312211."
   },
   {
     id: 5,
-    question: "You're in a dark room with a candle, a wood stove, and a gas lamp. You only have one match. What do you light first?",
-    options: ["The candle", "The wood stove", "The gas lamp", "The match"],
-    correct: 3,
-    explanation: "You must light the match first before you can light anything else!"
+    question: "You can seal one of two zones: Zone A: 100 people, 10% infected Zone B: 1000 people, 1% infected Sealing which zone reduces total infections more?",
+    options: ["Zone A", "Zone B", "Both Equal", "Cannot determine"],
+    correct: 2,
   },
   {
     id: 6,
-    question: "A farmer has 17 sheep. All but 9 die. How many sheep are left?",
-    options: ["8", "9", "17", "0"],
+    question: "During outbreaks, people often underestimate early danger because of:",
+    options: ["Intelligence gap", "Optimism bias", "Fear response", "Herd mentality"],
     correct: 1,
-    explanation: "'All but 9 die' means 9 survive. The answer is 9."
+    explanation: "Optimism bias leads people to believe they are less likely to be affected by a threat than others."
   },
   {
     id: 7,
@@ -96,24 +94,10 @@ const defaultLevel1Questions = [
   },
   {
     id: 8,
-    question: "If you have a bowl with six apples and you take away four, how many do you have?",
-    options: ["Two", "Four", "Six", "Zero"],
-    correct: 1,
-    explanation: "You took four apples, so YOU have four apples."
-  },
-  {
-    id: 9,
-    question: "A bat and a ball together cost $1.10. The bat costs $1.00 more than the ball. How much does the ball cost?",
-    options: ["$0.10", "$0.05", "$0.15", "$0.01"],
-    correct: 1,
-    explanation: "If ball = $0.05, then bat = $1.05. Total = $1.10. Most people instinctively say $0.10, but that's wrong!"
-  },
-  {
-    id: 10,
-    question: "Three doctors said Robert is their brother. Robert says he has no brothers. Who is lying?",
-    options: ["Robert is lying", "The doctors are lying", "Nobody is lying", "One doctor is lying"],
+    question: "In extreme fear, which hormone spikes the most?",
+    options: ["Dopamine", "Serotonin", "Adrenaline", "Melatonin"],
     correct: 2,
-    explanation: "Nobody is lying — the three doctors are Robert's sisters!"
+    explanation: "Adrenaline (epinephrine) is the hormone that spikes the most in extreme fear."
   }
 ];
 
