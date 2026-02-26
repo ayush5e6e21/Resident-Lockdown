@@ -542,6 +542,7 @@ function resetGame() {
 
   addSystemMessage('SYSTEM RESET COMPLETE. AWAITING NEW SUBJECTS.', 'info');
   io.emit('gameReset');
+  io.emit('leaderboardUpdate', []);
 }
 
 // ==================== SOCKET.IO HANDLERS ====================
@@ -663,9 +664,27 @@ io.on('connection', (socket) => {
     });
 
     updateLeaderboard();
-    addSystemMessage('SYSTEM PREPARING FOR SIMULATION...', 'info');
+    addSystemMessage('CONTAINMENT BREACH IMMINENT. INITIATING SIMULATION...', 'info');
 
-    setTimeout(startLevel1, 2000);
+    // Broadcast fresh admin data immediately so admin panel shows clean state
+    io.emit('adminData', {
+      players: Array.from(gameState.players.values()).map(p => ({
+        id: p.id, name: p.name, score: p.score, infectionLevel: p.infectionLevel,
+        status: p.status, correctAnswers: p.correctAnswers, wrongAnswers: p.wrongAnswers,
+        eliminated: p.eliminated, completed: p.completed, completionOrder: p.completionOrder,
+        questionIndex: p.questionIndex
+      })),
+      questions: gameState.questions,
+      settings: {
+        level1Timer: gameState.level1Timer, level2Timer: gameState.level2Timer,
+        eliminationPercentage: gameState.eliminationPercentage,
+        currentLevel: gameState.currentLevel, isActive: gameState.isActive,
+        level1Ended: gameState.level1Ended || false
+      }
+    });
+
+    // Start Level 1 immediately — no delay
+    startLevel1();
   });
 
   socket.on('adminResetGame', () => {

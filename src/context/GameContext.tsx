@@ -93,7 +93,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setPlayer(prev => prev ? {
         ...prev,
         infectionLevel: data.infectionLevel,
-        score: data.score
+        score: data.score,
+        correctAnswers: data.correct ? (prev.correctAnswers || 0) + 1 : prev.correctAnswers || 0,
+        wrongAnswers: data.correct ? prev.wrongAnswers || 0 : (prev.wrongAnswers || 0) + 1
       } : null);
     });
 
