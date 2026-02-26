@@ -418,13 +418,28 @@ function sendNextQuestionToPlayer(player) {
   setTimeout(() => {
     if (gameState.isActive && !player.eliminated && !player.answeredCurrent && player.questionIndex === currentQuestionIdx) {
       // Time's up for this player on this question
+      player.answeredCurrent = true;
       player.wrongAnswers++;
       player.infectionLevel += 20;
       if (player.infectionLevel >= 100) {
         eliminatePlayer(player.id, 'Failed to respond in time');
       } else {
+        // Send timeout result — player must manually click NEXT QUERY
+        const questions = gameState.currentLevel === 1 ? gameState.questions.level1 : gameState.questions.level2;
+        const timedOutQuestion = questions[player.questionIndex];
+        if (player.socketId) {
+          const sock = io.sockets.sockets.get(player.socketId);
+          if (sock) {
+            sock.emit('answerResult', {
+              correct: false,
+              correctAnswer: timedOutQuestion ? timedOutQuestion.correct : 0,
+              explanation: "⏱ TIME'S UP! You didn't answer in time.",
+              infectionLevel: player.infectionLevel,
+              score: player.score
+            });
+          }
+        }
         player.questionIndex++;
-        sendNextQuestionToPlayer(player);
       }
       updateLeaderboard();
     }
