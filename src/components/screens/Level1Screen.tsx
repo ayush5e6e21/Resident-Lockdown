@@ -23,9 +23,13 @@ export function Level1Screen() {
 
   const currentQuestion = getCurrentQuestion();
 
-  // Visual timer only - server handles the actual timeout
+  // Reset state + start visual timer when a new question arrives
   useEffect(() => {
-    if (!currentQuestion || hasAnswered) return;
+    // Reset answer state for the new question
+    setSelectedAnswer(null);
+    setHasAnswered(false);
+
+    if (!currentQuestion) return;
 
     setTimeLeft(questionTimer);
     const timer = setInterval(() => {
@@ -39,13 +43,7 @@ export function Level1Screen() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [currentQuestion?.id]);
-
-  // Reset answer state when a NEW question arrives
-  useEffect(() => {
-    setSelectedAnswer(null);
-    setHasAnswered(false);
-  }, [currentQuestion?.id]);
+  }, [currentQuestion?.id, questionTimer]);
 
   const handleAnswer = (index: number) => {
     if (hasAnswered) return;
