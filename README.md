@@ -138,6 +138,8 @@ From the admin panel you can:
 
 ---
 
+🔗 Play Now: https://resident-lockdown.onrender.com/
+
 ## 📁 Project Structure
 
 ```
